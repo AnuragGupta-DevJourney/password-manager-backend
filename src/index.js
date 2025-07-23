@@ -10,13 +10,17 @@ const app = express()
 
 app.use(cors())
 
+app.get("/", (req, res) => {
+    res.send("Server running...")
+})
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 mongoDB_connection()
 
 app.use("/user", userRouter)
-app.use("/auth", authenticationMiddleware , passwordManagerRoutes)
+app.use("/auth", authenticationMiddleware, passwordManagerRoutes)
 
 console.log(process.env.PORT)
 
