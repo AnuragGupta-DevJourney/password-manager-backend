@@ -132,6 +132,7 @@ export const handlePasswordResetLink = async (req, res) => {
         const resetLink = `https://password-manager-vault.netlify.app/reset-password-page/${resetToken}`;  // Update with frontend URL
 
         await transporter.sendMail({
+            from : "anuraggupta2004a@gmail.com",
             to: user.email,
             subject: "Password Reset Request",
             text: `Click this link to reset your password: ${resetLink}`
