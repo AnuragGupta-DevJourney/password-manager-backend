@@ -128,8 +128,8 @@ export const handlePasswordResetLink = async (req, res) => {
                 pass: 'twkakpdcmtmfzupu'
             }
         });
-
-        const resetLink = `http://localhost:5173/reset-password-page/${resetToken}`;  // Update with frontend URL
+        const localhost_URL = "http://localhost:5173"
+        const resetLink = `https://password-manager-vault.netlify.app/reset-password-page/${resetToken}`;  // Update with frontend URL
 
         await transporter.sendMail({
             to: user.email,
