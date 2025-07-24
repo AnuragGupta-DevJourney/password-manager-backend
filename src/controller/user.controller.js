@@ -95,6 +95,17 @@ export const handleUserSignUp = async (req, res) => {
 
 }
 
+const number = "1234567890"
+const generateKey = () => {
+    let string = ""
+    for (let i = 1; i <= 6; i++) {
+        const randomNumber = Math.floor(Math.random() * 6)
+        string = string + number[randomNumber]
+    }
+
+    return string
+}
+
 export const handlePasswordResetLink = async (req, res) => {
 
     try {
@@ -109,16 +120,18 @@ export const handlePasswordResetLink = async (req, res) => {
             })
         }
 
-        console.log("Email" ,user.email)
+        console.log("Email", user.email)
         // Generate a reset token (random string)
-        const resetToken = crypto.randomBytes(32).toString("hex");
-        console.log("reset token" , resetToken)
+        // const resetToken = crypto.randomBytes(32).toString("hex");
+        const resetToken = generateKey();
+        console.log(resetToken)
+        console.log("reset token", resetToken)
         // Save the token and set an expiry (1 hour)
         user.resetPasswordToken = resetToken;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
         const response = await user.save();
 
-        console.log("end"  ,response)
+        console.log("end", response)
 
         // Send email with the reset link
         const transporter = nodemailer.createTransport({
@@ -132,10 +145,12 @@ export const handlePasswordResetLink = async (req, res) => {
         const resetLink = `https://password-manager-vault.netlify.app/reset-password-page/${resetToken}`;  // Update with frontend URL
 
         await transporter.sendMail({
-            from : "anuraggupta2004a@gmail.com",
+            from: "anuraggupta2004a@gmail.com",
             to: user.email,
             subject: "Password Reset Request",
-            text: `Click this link to reset your password: ${resetLink}`
+            html: ` <p>Enter this key in the password verify page: </br>
+                        <span style="font-weight: bold; font-size: 1.8rem;">${resetLink}</span>
+                    </p>`
         });
 
         return res.status(200).json({
@@ -159,7 +174,7 @@ export const handlePasswordResetPage = async (req, res) => {
         const { token } = req.params;
         const { newPassword } = req.body;
 
-        console.log({token , newPassword})
+        console.log({ token, newPassword })
         // Find user with valid token and expiry time
         const user = await User.findOne({
             resetPasswordToken: token,
