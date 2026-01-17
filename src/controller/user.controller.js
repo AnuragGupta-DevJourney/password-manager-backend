@@ -91,8 +91,6 @@ export const handleUserSignUp = async (req, res) => {
 }
 
 export const handlePasswordResetLink = async (req, res) => {
-    debugger
-    console.log("called")
 
     try {
         const { email, username } = req.body
