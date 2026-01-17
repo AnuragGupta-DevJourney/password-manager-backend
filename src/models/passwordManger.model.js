@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const passwordManagerSchema = new mongoose.Schema({
+const passwordManagerSchema =  new mongoose.Schema({
 
     siteName: {
         type: String,

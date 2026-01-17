@@ -8,11 +8,6 @@ export const handleUserLogin = async (req, res) => {
     try {
         const { email, username, password } = req.body
 
-        console.log("login details", {
-            email: email,
-            username: username,
-            password: password
-        })
 
         const user = await User.findOne({ $or: [{ email: email }, { username: username }] })
 
@@ -96,6 +91,8 @@ export const handleUserSignUp = async (req, res) => {
 }
 
 export const handlePasswordResetLink = async (req, res) => {
+    debugger
+    console.log("called")
 
     try {
         const { email, username } = req.body
@@ -125,10 +122,10 @@ export const handlePasswordResetLink = async (req, res) => {
             service: 'gmail',
             auth: {
                 user: 'anuraggupta2004a@gmail.com',
-                pass: 'twkakpdcmtmfzupu'
+                pass: 'pplwymfhkvjvjmwr'
             }
         });
-        const localhost_URL = "http://localhost:5173"
+        // const localhost_URL = "http://localhost:5173"
         const resetLink = `https://password-manager-vault.netlify.app/reset-password-page/${resetToken}`;  // Update with frontend URL
 
         await transporter.sendMail({
@@ -144,7 +141,8 @@ export const handlePasswordResetLink = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({
-            message: "Internal Server Error While sending the Email Link"
+            message: "Internal Server Error While sending the Email Link",
+            error:error
         });
 
     }
@@ -154,12 +152,16 @@ export const handlePasswordResetLink = async (req, res) => {
 
 
 export const handlePasswordResetPage = async (req, res) => {
+        
     console.log("password reset pasge called here")
     try {
         const { token } = req.params;
         const { newPassword } = req.body;
 
-        console.log({token , newPassword})
+       if(!newPassword || newPassword.trim() == ''){
+        return res.status(400).json({success:false , message:"Password is required"})
+       }
+
         // Find user with valid token and expiry time
         const user = await User.findOne({
             resetPasswordToken: token,
